@@ -1,0 +1,28 @@
+{
+  "name": "parcel-plugin-zengine-migrator",
+  "version": "0.0.1",
+  "description": "Parcel Plugin for Building/Migrating Legacy Zengine Plugins",
+  "main": "src/index.js",
+  "peerDependencies": {
+    "parcel-bundler": ">=1.12.3"
+  },
+  "devDependencies": {
+    "parcel-bundler": ">=1.12.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Wizehive/parcel-plugin-zengine-migrator.git"
+  },
+  "keywords": [
+    "parcel",
+    "plugin",
+    "zengine",
+    "migration"
+  ],
+  "author": "Ben Steward <ben.steward@wizehive.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Wizehive/parcel-plugin-zengine-migrator/issues"
+  },
+  "homepage": "https://github.com/Wizehive/parcel-plugin-zengine-migrator#readme"
+}
