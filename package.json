@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/Wizehive/parcel-plugin-zengine-migrator/issues"
   },
-  "homepage": "https://github.com/Wizehive/parcel-plugin-zengine-migrator#readme"
+  "homepage": "https://github.com/Wizehive/parcel-plugin-zengine-migrator#readme",
+  "dependencies": {
+    "acorn": "^7.0.0"
+  }
 }
