@@ -26,12 +26,16 @@ function getRegisterArguments (expressionStatement) {
   return expressionStatement.expression.arguments
     .reduce((settings, arg) => {
       if (arg.type === 'ObjectExpression') {
+        let hasInterfaces = false
+
         arg.properties.forEach(property => {
           if (property.key.name === 'icon') {
             settings.icon = property.value.value
           }
 
           if (property.key.name === 'interfaces') {
+            hasInterfaces = true
+
             property.value.elements.forEach(element => {
               if (element.type === 'ObjectExpression') {
                 const view = { src: '/index.html' }
@@ -54,6 +58,29 @@ function getRegisterArguments (expressionStatement) {
             })
           }
         })
+
+        if (!hasInterfaces) {
+          const view = { src: '/index.html' }
+
+          arg.properties.forEach(prop => {
+            if (prop.key.name === 'type' || prop.key.name === 'location') {
+              view[prop.key.name] = prop.value.value
+            }
+
+            if (prop.key.name === 'fullPage' && prop.value.value === true) {
+              view.type = 'fullPage'
+            }
+
+            if (prop.key.name === 'defaultDimensions' && prop.value.type === 'ObjectExpression') {
+              view.defaultDimensions = prop.value.properties.reduce((map, p) => ({
+                ...map,
+                [p.key.name]: p.value.value
+              }), {})
+            }
+          })
+
+          settings.views.push(view)
+        }
       }
 
       return settings
