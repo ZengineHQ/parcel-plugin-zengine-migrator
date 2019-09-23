@@ -2,8 +2,12 @@ const path = require('path')
 const fs = require('fs')
 const { relCwd } = require('./utils')
 const registerExtractor = require('./register-extractor')
+const { start } = require('./legacy-builder')
 
-module.exports = (bundler) => {
+module.exports = async bundler => {
+  // Start legacy builder
+  await start(bundler)
+
   // Add special asset types for interpolating the plugin assets into the wrapper files
   bundler.addAssetType('.js', require.resolve('./JSAsset.js'))
   bundler.addAssetType('.css', require.resolve('./CSSAsset.js'))
