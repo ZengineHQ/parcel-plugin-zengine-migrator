@@ -11,7 +11,7 @@ class ZengineMigratorHTMLAsset extends HTMLAsset {
   interpolate (code) {
     const replacement = require('fs').readFileSync(require('path').resolve(process.cwd(), '.legacy-output', 'plugin.html'))
 
-    return code.replace(`%PLUGIN_HTML%`, replacement)
+    return code.replace(`%PLUGIN_HTML%`, () => replacement)
   }
 }
 

@@ -11,7 +11,7 @@ class ZengineMigratorCSSAsset extends CSSAsset {
   interpolate(code) {
     const replacement = require('fs').readFileSync(require('path').resolve(process.cwd(), '.legacy-output', 'plugin.css'))
 
-    return code.replace(/\/\*\s*PLUGIN_CSS\s*\*\//, replacement)
+    return code.replace(/\/\*\s*PLUGIN_CSS\s*\*\//, () => replacement)
   }
 }
 
