@@ -1,5 +1,5 @@
 const { readFileSync } = require('fs')
-const { resolve } = require('path')
+const { relCwd } = require('./utils')
 
 const CSSAsset = parseInt(process.versions.node, 10) < 8
   ? require('parcel-bundler/lib/assets/CSSAsset.js')
@@ -12,7 +12,7 @@ class ZengineMigratorCSSAsset extends CSSAsset {
   }
 
   interpolate(code) {
-    const replacement = readFileSync(resolve(process.cwd(), '.legacy-output', 'plugin.css'), { encoding: 'utf8' })
+    const replacement = readFileSync(relCwd('.legacy-output', 'plugin.css'), { encoding: 'utf8' })
 
     return code.replace(/\/\*\s*PLUGIN_CSS\s*\*\//, () => replacement)
   }

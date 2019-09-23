@@ -1,5 +1,5 @@
 const { readFileSync } = require('fs')
-const { resolve } = require('path')
+const { relCwd } = require('./utils')
 
 const JSAsset = parseInt(process.versions.node, 10) < 8
   ? require('parcel-bundler/lib/assets/JSAsset.js')
@@ -12,7 +12,7 @@ class ZengineMigratorJSAsset extends JSAsset {
   }
 
   interpolate (code) {
-    const replacement = readFileSync(resolve(process.cwd(), '.legacy-output', 'plugin.js'), { encoding: 'utf8' })
+    const replacement = readFileSync(relCwd('.legacy-output', 'plugin.js'), { encoding: 'utf8' })
 
     return code.replace(/\/\*\s*PLUGIN_JS\s*\*\//, () => replacement)
   }

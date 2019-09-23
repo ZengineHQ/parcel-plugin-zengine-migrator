@@ -1,5 +1,5 @@
 const { readFileSync } = require('fs')
-const { resolve } = require('path')
+const { relCwd } = require('./utils')
 
 const HTMLAsset = parseInt(process.versions.node, 10) < 8
   ? require('parcel-bundler/lib/assets/HTMLAsset.js')
@@ -12,8 +12,8 @@ class ZengineMigratorHTMLAsset extends HTMLAsset {
   }
 
   interpolate (code) {
-    const replacement = readFileSync(resolve(process.cwd(), '.legacy-output', 'plugin.html'), { encoding: 'utf8' })
-
+    const replacement = readFileSync(relCwd('.legacy-output', 'plugin.html'), { encoding: 'utf8' })
+    console.log('hereeeee')
     return code.replace(`%PLUGIN_HTML%`, replacement)
   }
 }

@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs')
+const { relCwd } = require('./utils')
 const registerExtractor = require('./register-extractor')
 
 module.exports = (bundler) => {
@@ -12,9 +13,9 @@ module.exports = (bundler) => {
   bundler.on('bundled', bundle => {
     const bundleDir = path.dirname(bundle.name || bundler.mainBundle.childBundles.values().next().value.name)
 
-    const pluginHTML = path.resolve(process.cwd(), '.legacy-output', 'plugin.html')
-    const pluginCSS = path.resolve(process.cwd(), '.legacy-output', 'plugin.css')
-    const pluginJS = path.resolve(process.cwd(), '.legacy-output', 'plugin.js')
+    const pluginHTML = relCwd('.legacy-output', 'plugin.html')
+    const pluginCSS = relCwd('.legacy-output', 'plugin.css')
+    const pluginJS = relCwd('.legacy-output', 'plugin.js')
 
     for (const childBundle of bundle.childBundles) {
       if (childBundle.type === 'css' && fs.existsSync(pluginCSS)) {
