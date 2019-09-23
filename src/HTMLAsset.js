@@ -13,7 +13,7 @@ class ZengineMigratorHTMLAsset extends HTMLAsset {
 
   interpolate (code) {
     const replacement = readFileSync(relCwd('.legacy-output', 'plugin.html'), { encoding: 'utf8' })
-    console.log('hereeeee')
+
     return code.replace(`%PLUGIN_HTML%`, replacement)
   }
 }
