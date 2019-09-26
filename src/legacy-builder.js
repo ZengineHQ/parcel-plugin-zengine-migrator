@@ -30,7 +30,7 @@ exports.start = async bundler => {
 
   // Set up any common dependencies
   const common = await readFile(relCwd('dependencies'), { encoding: 'utf8' })
-    .catch(err => console.warn('Error reading dependencies file. Moving on.'))
+    .catch(err => console.warn('Unable to read `dependencies` file. Moving on.'))
 
   if (common && typeof common === 'string') {
     for (const dep of common.split('\n')) {
