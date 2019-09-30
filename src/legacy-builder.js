@@ -52,24 +52,26 @@ exports.start = async bundler => {
     }
   }
 
-  // Set up main directory
-  await setupDirectory(relCwd('src'))
+  if (fs.existsSync(relCwd('src'))) {
+    // Set up main directory
+    await setupDirectory(relCwd('src'))
 
-  // Cache the plugin.register.js last, so it is injected into the bundle last.
-  const registerPath = relCwd('plugin-register.js')
+    // Cache the plugin.register.js last, so it is injected into the bundle last.
+    const registerPath = relCwd('plugin-register.js')
 
-  if (fs.existsSync(registerPath)) {
-    await cacheContents(registerPath, 'js')
+    if (fs.existsSync(registerPath)) {
+      await cacheContents(registerPath, 'js')
+    }
+
+    await mkdirp(relCwd('.legacy-output'))
+
+    await writeFile(relCwd('.legacy-output', 'plugin.js'), cache.content.js.join('\n\n'))
+    await writeFile(relCwd('.legacy-output', 'plugin.css'), cache.content.css.join('\n\n'))
+    await writeFile(relCwd('.legacy-output', 'plugin.scss'), cache.content.scss.join('\n\n'))
+    await writeFile(relCwd('.legacy-output', 'plugin.html'), cache.content.html.join('\n\n'))
+
+    if (process.env.NODE_ENV !== 'production') initializeWatcher(bundler)
   }
-
-  await mkdirp(relCwd('.legacy-output'))
-
-  await writeFile(relCwd('.legacy-output', 'plugin.js'), cache.content.js.join('\n\n'))
-  await writeFile(relCwd('.legacy-output', 'plugin.css'), cache.content.css.join('\n\n'))
-  await writeFile(relCwd('.legacy-output', 'plugin.scss'), cache.content.scss.join('\n\n'))
-  await writeFile(relCwd('.legacy-output', 'plugin.html'), cache.content.html.join('\n\n'))
-
-  if (process.env.NODE_ENV !== 'production') initializeWatcher(bundler)
 }
 
 async function initializeWatcher (bundler) {
