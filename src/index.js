@@ -10,7 +10,7 @@ module.exports = async bundler => {
 
   // Add special asset types for interpolating the plugin assets into the wrapper files
   bundler.addAssetType('.js', require.resolve('./JSAsset.js'))
-  bundler.addAssetType('.css', require.resolve('./CSSAsset.js'))
+  bundler.addAssetType('.scss', require.resolve('./SASSAsset.js'))
   bundler.addAssetType('.html', require.resolve('./HTMLAsset.js'))
 
   // Setup watcher for the source files

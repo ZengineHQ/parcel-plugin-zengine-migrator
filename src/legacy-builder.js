@@ -66,6 +66,7 @@ exports.start = async bundler => {
 
   await writeFile(relCwd('.legacy-output', 'plugin.js'), cache.content.js.join('\n\n'))
   await writeFile(relCwd('.legacy-output', 'plugin.css'), cache.content.css.join('\n\n'))
+  await writeFile(relCwd('.legacy-output', 'plugin.scss'), cache.content.scss.join('\n\n'))
   await writeFile(relCwd('.legacy-output', 'plugin.html'), cache.content.html.join('\n\n'))
 
   if (process.env.NODE_ENV !== 'production') initializeWatcher(bundler)
