@@ -25,9 +25,6 @@ const cache = {
 }
 
 exports.start = async bundler => {
-  // Set up main directory
-  await setupDirectory(relCwd('./src'))
-
   // Set up any common dependencies
   const common = await readFile(relCwd('dependencies'), { encoding: 'utf8' })
     .catch(err => console.warn('Unable to read `dependencies` file. Moving on.'))
@@ -54,6 +51,9 @@ exports.start = async bundler => {
       }
     }
   }
+
+  // Set up main directory
+  await setupDirectory(relCwd('src'))
 
   // Cache the plugin.register.js last, so it is injected into the bundle last.
   const registerPath = relCwd('plugin-register.js')
