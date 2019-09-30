@@ -1,5 +1,6 @@
-const { readFileSync } = require('fs')
-const { relCwd } = require('./utils')
+const fs = require('fs')
+const { relCwd, promisify } = require('./utils')
+const readFile = promisify(fs.readFile)
 
 const SASSAsset = parseInt(process.versions.node, 10) < 8
   ? require('parcel-bundler/lib/assets/SASSAsset.js')
@@ -7,18 +8,22 @@ const SASSAsset = parseInt(process.versions.node, 10) < 8
 
 class ZengineMigratorSASSAsset extends SASSAsset {
   async pretransform() {
-    this.contents = this.interpolate(this.contents)
+    this.contents = await this.interpolate(this.contents)
     return super.pretransform()
   }
 
-  interpolate(code) {
-    const css = readFileSync(relCwd('.legacy-output', 'plugin.css'), { encoding: 'utf8' })
-    const scss = readFileSync(relCwd('.legacy-output', 'plugin.scss'), { encoding: 'utf8' })
+  async interpolate(code) {
+    const css = await findAndReadFile(relCwd('.legacy-output', 'plugin.css'))
+    const scss = await findAndReadFile(relCwd('.legacy-output', 'plugin.scss'))
 
     const replacement = scss.trim().length ? scss : css
 
     return code.replace(/\/\*\s*PLUGIN_CSS\s*\*\//, () => replacement)
   }
+}
+
+function findAndReadFile (path) {
+  return readFile(path, { encoding: 'utf8' }).catch(err => '')
 }
 
 module.exports = ZengineMigratorSASSAsset
