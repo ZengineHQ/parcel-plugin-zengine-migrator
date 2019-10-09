@@ -19,11 +19,18 @@ module.exports = async bundler => {
 
     const pluginHTML = relCwd('.legacy-output', 'plugin.html')
     const pluginCSS = relCwd('.legacy-output', 'plugin.css')
+    const pluginSCSS = relCwd('.legacy-output', 'plugin.scss')
     const pluginJS = relCwd('.legacy-output', 'plugin.js')
 
     for (const childBundle of bundle.childBundles) {
-      if (childBundle.type === 'css' && fs.existsSync(pluginCSS)) {
+      if (childBundle.type === 'css') {
+        if (fs.existsSync(pluginCSS)) {
         bundler.watch(pluginCSS, childBundle.entryAsset)
+      }
+
+        if (fs.existsSync(pluginSCSS)) {
+          bundler.watch(pluginSCSS, childBundle.entryAsset)
+        }
       }
 
       if (childBundle.type === 'js' && fs.existsSync(pluginJS)) {
