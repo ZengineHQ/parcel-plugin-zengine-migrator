@@ -2,6 +2,10 @@
   "name": "parcel-plugin-zengine-migrator",
   "version": "0.0.1",
   "description": "Parcel Plugin for Building/Migrating Legacy Zengine Plugins",
+  "scripts": {
+    "test": "node ./test",
+    "tdd": "nodemon ./test"
+  },
   "main": "src/index.js",
   "peerDependencies": {
     "parcel-bundler": ">=1.12.3"
