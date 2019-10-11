@@ -1,6 +1,6 @@
 const path = require('path')
 
-exports.promisify = function (fn) {
+const promisify = function (fn) {
   return function (...args) {
     return new Promise(function (resolve, reject) {
       fn(...args, function (err, ...res) {
@@ -14,4 +14,22 @@ exports.promisify = function (fn) {
   }
 }
 
-exports.relCwd = (...segments) => path.resolve(process.cwd(), ...segments)
+const relCwd = (...segments) => path.resolve(process.cwd(), ...segments)
+
+const kebabToCamelCase = string => string.replace(/-(.)/g, (match, first) => first.toUpperCase())
+
+const wgnTransformer = (contents, namespace) => contents
+  .replace(/wgn([A-Za-z])/g, (match, first) => `${kebabToCamelCase(namespace)}${first.toUpperCase()}`)
+  .replace(/wgn/g, () => namespace)
+
+const getNamespace = () => {
+  return 'letter-generator'
+}
+
+module.exports = {
+  promisify,
+  relCwd,
+  kebabToCamelCase,
+  wgnTransformer,
+  getNamespace
+}
