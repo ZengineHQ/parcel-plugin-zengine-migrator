@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const Mkdirp = require('mkdirp')
 const { watch } = require('chokidar')
-const { promisify, relCwd } = require('./utils')
+const { promisify, relCwd, wgnTransformer, getNamespace } = require('./utils')
 
 const readdir = promisify(fs.readdir)
 const readFile = promisify(fs.readFile)
@@ -65,10 +65,22 @@ exports.start = async bundler => {
 
     await mkdirp(relCwd('.legacy-output'))
 
-    await writeFile(relCwd('.legacy-output', 'plugin.js'), cache.content.js.join('\n\n'))
-    await writeFile(relCwd('.legacy-output', 'plugin.css'), cache.content.css.join('\n\n'))
-    await writeFile(relCwd('.legacy-output', 'plugin.scss'), cache.content.scss.join('\n\n'))
-    await writeFile(relCwd('.legacy-output', 'plugin.html'), cache.content.html.join('\n\n'))
+    await writeFile(
+      relCwd('.legacy-output', 'plugin.js'),
+      wgnTransformer(cache.content.js.join('\n\n'), getNamespace())
+    )
+    await writeFile(
+      relCwd('.legacy-output', 'plugin.css'),
+      wgnTransformer(cache.content.css.join('\n\n'), getNamespace())
+    )
+    await writeFile(
+      relCwd('.legacy-output', 'plugin.scss'),
+      wgnTransformer(cache.content.scss.join('\n\n'), getNamespace())
+    )
+    await writeFile(
+      relCwd('.legacy-output', 'plugin.html'),
+      wgnTransformer(cache.content.html.join('\n\n'), getNamespace())
+    )
 
     if (process.env.NODE_ENV !== 'production') initializeWatcher(bundler)
   }
@@ -89,7 +101,7 @@ async function initializeWatcher (bundler) {
 
     const newOutput = cache.content[type].filter(Boolean).join('\n\n')
 
-    writeFile(relCwd('.legacy-output', `plugin.${type}`), newOutput)
+    writeFile(relCwd('.legacy-output', `plugin.${type}`), wgnTransformer(newOutput, getNamespace()))
   })
 
   fileWatcher.on('unlink', changedPath => {
@@ -100,7 +112,7 @@ async function initializeWatcher (bundler) {
 
     const newOutput = cache.content[type].filter(Boolean).join('\n\n')
 
-    writeFile(relCwd('.legacy-output', `plugin.${type}`), newOutput)
+    writeFile(relCwd('.legacy-output', `plugin.${type}`), wgnTransformer(newOutput, getNamespace()))
   })
 }
 
