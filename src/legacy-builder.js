@@ -147,7 +147,7 @@ async function setupDirectory (dirPath) {
     }
   }
 
-  dirs.forEach(dir => setupDirectory(dir))
+  await Promise.all(dirs.map(dir => setupDirectory(dir)))
 }
 
 function cacheLinkedContents (fullPath, type) {
