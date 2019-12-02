@@ -41,7 +41,7 @@ function getRegisterArguments (expressionStatement) {
                 const view = { src: '/index.html' }
 
                 element.properties.forEach(prop => {
-                  if (prop.key.name === 'type' || prop.key.name === 'location') {
+                  if (prop.key.name === 'type' || prop.key.name === 'location' || prop.key.name === 'src') {
                     view[prop.key.name] = prop.value.value
                   }
 
