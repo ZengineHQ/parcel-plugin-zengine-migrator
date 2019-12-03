@@ -19,8 +19,23 @@ const relCwd = (...segments) => path.resolve(process.cwd(), ...segments)
 
 const kebabToCamelCase = string => string.replace(/-(.)/g, (match, first) => first.toUpperCase())
 
+/**
+ * Transforms camelCase strings to dash-separated ones.
+ *
+ * @param {string} str
+ * @return {string}
+ *
+ * Based on https://gist.github.com/youssman/745578062609e8acac9f
+ */
+const camelCaseToKebab = str => {
+  return str.toString().trim()
+    .replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)
+    .toLowerCase()
+}
+
 const wgnTransformer = (contents, namespace) => contents
   .replace(/wgn([A-Za-z])/g, (match, first) => `${kebabToCamelCase(namespace)}${first.toUpperCase()}`)
+  .replace(/wgn-/g, () => `${camelCaseToKebab(namespace)}-`)
   .replace(/wgn/g, () => namespace)
 
 const mayaJSON = fs.existsSync(relCwd('..', '..', 'maya.json')) && require(relCwd('..', '..', 'maya.json'))
@@ -44,5 +59,6 @@ module.exports = {
   relCwd,
   kebabToCamelCase,
   wgnTransformer,
-  getNamespace
+  getNamespace,
+  camelCaseToKebab
 }
