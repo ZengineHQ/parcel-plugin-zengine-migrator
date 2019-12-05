@@ -41,8 +41,18 @@ function getRegisterArguments (expressionStatement) {
                 const view = { src: '/index.html' }
 
                 element.properties.forEach(prop => {
-                  if (prop.key.name === 'type' || prop.key.name === 'location' || prop.key.name === 'src' || prop.key.name === 'topNav') {
+                  if (prop.key.name === 'type' || prop.key.name === 'location' || prop.key.name === 'src' || prop.key.name === 'hideIcon') {
                     view[prop.key.name] = prop.value.value
+
+                    if (prop.key.name === 'type' && prop.value.value === 'fullPage') {
+                      if (!view.hasOwnProperty('hideIcon')) {
+                        view.hideIcon = true
+                      }
+                    }
+                  }
+
+                  if (prop.key.name === 'topNav' && prop.value.value === true) {
+                    view.hideIcon = false
                   }
 
                   if (prop.key.name === 'defaultDimensions' && prop.value.type === 'ObjectExpression') {
@@ -63,12 +73,20 @@ function getRegisterArguments (expressionStatement) {
           const view = { src: '/index.html' }
 
           arg.properties.forEach(prop => {
-            if (prop.key.name === 'type' || prop.key.name === 'location') {
+            if (prop.key.name === 'type' || prop.key.name === 'location' || prop.key.name === 'src') {
               view[prop.key.name] = prop.value.value
             }
 
             if (prop.key.name === 'fullPage' && prop.value.value === true) {
               view.type = 'fullPage'
+
+              if (!view.hasOwnProperty('hideIcon')) {
+                view.hideIcon = true
+              }
+            }
+
+            if (prop.key.name === 'topNav') {
+              view.hideIcon = !prop.value.value
             }
 
             if (prop.key.name === 'defaultDimensions' && prop.value.type === 'ObjectExpression') {
