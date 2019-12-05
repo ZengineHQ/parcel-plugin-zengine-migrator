@@ -1,5 +1,29 @@
 const assert = require('assert')
+const { deepEqual } = assert
 const { wgnTransformer, kebabToCamelCase, camelCaseToKebab } = require('../src/utils')
+const extractPluginJSON = require('../src/register-extractor')
+const {
+  fullPageWithTopNavTrue,
+  fullPageWithTopNavTrueResult,
+  fullPageWithTopNavFalse,
+  fullPageWithTopNavFalseResult,
+  fullPageWithTopNavUndefined,
+  fullPageWithTopNavUndefinedResult,
+  fullPageSettingsAndInline,
+  fullPageSettingsAndInlineResult,
+  fullPageSettingsAndInlineWithSpecifiedSrc,
+  fullPageSettingsAndInlineWithSpecifiedSrcResult,
+  fullPageAndRecordOverlyWithHiddenIcon,
+  fullPageAndRecordOverlyWithHiddenIconResult,
+  singleInterfaceFullPage,
+  singleInterfaceFullPageResult,
+  singleInterfaceFullPageHideIcon,
+  singleInterfaceFullPageHideIconResult,
+  singleInterfaceInline,
+  singleInterfaceInlineResult,
+  singleInterfaceInlineNoIcon,
+  singleInterfaceInlineNoIconResult
+} = require('./plugin-register-examples')
 
 assert(
   kebabToCamelCase('name-space') === 'nameSpace',
@@ -131,6 +155,66 @@ const template = '<div id="name-space-settings">' +
 const pluginData = await znPluginData('nameSpace').post('my-route', { id: 4, data: settings })
 `,
 'wgnTransformer unable to convert full example with camelCase namespace'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(fullPageWithTopNavTrue)),
+  fullPageWithTopNavTrueResult,
+  'Unable to extract accurate plugin JSON from fullPage with topNav: true'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(fullPageWithTopNavFalse)),
+  fullPageWithTopNavFalseResult,
+  'Unable to extract accurate plugin JSON from fullPage with topNav: false'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(fullPageWithTopNavUndefined)),
+  fullPageWithTopNavUndefinedResult,
+  'Unable to extract accurate plugin JSON from fullPage with topNav undefined'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(fullPageSettingsAndInline)),
+  fullPageSettingsAndInlineResult,
+  'Unable to extract accurate plugin JSON from fullPage, settings, and inline with topNav: true'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(fullPageSettingsAndInlineWithSpecifiedSrc)),
+  fullPageSettingsAndInlineWithSpecifiedSrcResult,
+  'Unable to extract accurate plugin JSON from fullPage, settings, and inline with specified src property'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(fullPageAndRecordOverlyWithHiddenIcon)),
+  fullPageAndRecordOverlyWithHiddenIconResult,
+  'Unable to extract accurate plugin JSON from fullPage and recordOverlay with hideIcon: true'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(singleInterfaceFullPage)),
+  singleInterfaceFullPageResult,
+  'Unable to extract accurate plugin JSON from single fullPage interface'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(singleInterfaceFullPageHideIcon)),
+  singleInterfaceFullPageHideIconResult,
+  'Unable to extract accurate plugin JSON from single fullPage interface with hidden icon'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(singleInterfaceInline)),
+  singleInterfaceInlineResult,
+  'Unable to extract accurate plugin JSON from single inline interface with no icon and topNav: false'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(singleInterfaceInlineNoIcon)),
+  singleInterfaceInlineNoIconResult,
+  'Unable to extract accurate plugin JSON from single inline interface with no icon and topNav: false'
 )
 
 console.log('All tests pass!')
