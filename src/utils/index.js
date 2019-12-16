@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs')
+const { watch } = require('chokidar')
 
 const promisify = function (fn) {
   return function (...args) {
@@ -14,6 +15,8 @@ const promisify = function (fn) {
     })
   }
 }
+
+const readFile = promisify(fs.readFile)
 
 const relCwd = (...segments) => path.resolve(process.cwd(), ...segments)
 
@@ -38,7 +41,22 @@ const wgnTransformer = (contents, namespace) => contents
   .replace(/wgn-/g, () => `${camelCaseToKebab(namespace)}-`)
   .replace(/wgn/g, () => namespace)
 
-const mayaJSON = fs.existsSync(relCwd('..', '..', 'maya.json')) && require(relCwd('..', '..', 'maya.json'))
+let mayaJSON = fs.existsSync(relCwd('..', '..', 'maya.json')) &&
+  JSON.parse(fs.readFileSync(relCwd('..', '..', 'maya.json'), { encoding: 'utf8' }))
+
+const mayaWatcher = watch(relCwd('..', '..', 'maya.json'))
+
+mayaWatcher.on('change', async changedPath => {
+  const filePath = path.resolve(changedPath)
+
+  mayaJSON = await readFile(filePath, { encoding: 'utf8' })
+    .then(str => JSON.parse(str))
+    .catch(err => {
+      console.error('malformed maya.json:', err)
+
+      return mayaJSON
+    })
+})
 
 const pluginName = path.basename(process.cwd())
 
