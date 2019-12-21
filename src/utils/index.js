@@ -1,6 +1,5 @@
 const path = require('path')
 const fs = require('fs')
-const { watch } = require('chokidar')
 
 const promisify = function (fn) {
   return function (...args) {
@@ -36,22 +35,10 @@ const camelCaseToKebab = str => {
     .toLowerCase()
 }
 
-let mayaJSON = fs.existsSync(relCwd('..', '..', 'maya.json')) &&
-  JSON.parse(fs.readFileSync(relCwd('..', '..', 'maya.json'), { encoding: 'utf8' }))
+const mayaJSONPath = relCwd('..', '..', 'maya.json')
 
-const mayaWatcher = watch(relCwd('..', '..', 'maya.json'))
-
-mayaWatcher.on('change', async changedPath => {
-  const filePath = path.resolve(changedPath)
-
-  mayaJSON = await readFile(filePath, { encoding: 'utf8' })
-    .then(str => JSON.parse(str))
-    .catch(err => {
-      console.error('malformed maya.json:', err)
-
-      return mayaJSON
-    })
-})
+let mayaJSON = fs.existsSync(mayaJSONPath) &&
+  JSON.parse(fs.readFileSync(mayaJSONPath, { encoding: 'utf8' }))
 
 const pluginName = path.basename(process.cwd())
 
@@ -79,6 +66,16 @@ const wgnTransformer = (contents, namespace) => contents
 const replaceRouteTransformer = (contents, route) => contents
   .replace(new RegExp('{replace-route}', 'g'), route)
 
+const updateMayaJSON = async () => {
+  mayaJSON = await readFile(mayaJSONPath, { encoding: 'utf8' })
+    .then(str => JSON.parse(str))
+    .catch(err => {
+      console.error('malformed maya.json:', err)
+
+      return mayaJSON
+    })
+}
+
 module.exports = {
   promisify,
   relCwd,
@@ -87,5 +84,6 @@ module.exports = {
   getNamespace,
   camelCaseToKebab,
   getRoute,
-  replaceRouteTransformer
+  replaceRouteTransformer,
+  updateMayaJSON
 }

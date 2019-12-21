@@ -2,7 +2,15 @@ const fs = require('fs')
 const path = require('path')
 const Mkdirp = require('mkdirp')
 const { watch } = require('chokidar')
-const { promisify, relCwd, wgnTransformer, getNamespace, replaceRouteTransformer, getRoute } = require('./utils')
+const {
+  promisify,
+  relCwd,
+  wgnTransformer,
+  getNamespace,
+  replaceRouteTransformer,
+  getRoute,
+  updateMayaJSON
+} = require('./utils')
 
 const readdir = promisify(fs.readdir)
 const readFile = promisify(fs.readFile)
@@ -65,31 +73,34 @@ exports.start = async bundler => {
 
     await mkdirp(relCwd('.legacy-output'))
 
-    await writeFile(
+    await writeAllLegacyFiles()
+
+    if (process.env.NODE_ENV !== 'production') initializeWatcher(bundler)
+  }
+}
+
+async function writeAllLegacyFiles () {
+  return Promise.all([
+    writeFile(
       relCwd('.legacy-output', 'plugin.js'),
       wgnTransformer(
         replaceRouteTransformer(cache.content.js.join('\n\n'), getRoute()),
         getNamespace()
       )
-    )
-
-    await writeFile(
+    ),
+    writeFile(
       relCwd('.legacy-output', 'plugin.css'),
       wgnTransformer(cache.content.css.join('\n\n'), getNamespace())
-    )
-
-    await writeFile(
+    ),
+    writeFile(
       relCwd('.legacy-output', 'plugin.scss'),
       wgnTransformer(cache.content.scss.join('\n\n'), getNamespace())
-    )
-
-    await writeFile(
+    ),
+    writeFile(
       relCwd('.legacy-output', 'plugin.html'),
       wgnTransformer(cache.content.html.join('\n\n'), getNamespace())
     )
-
-    if (process.env.NODE_ENV !== 'production') initializeWatcher(bundler)
-  }
+  ])
 }
 
 async function initializeWatcher (bundler) {
@@ -127,6 +138,13 @@ async function initializeWatcher (bundler) {
     }
 
     writeFile(relCwd('.legacy-output', `plugin.${type}`), wgnTransformer(newOutput, getNamespace()))
+  })
+
+  const mayaWatcher = watch(relCwd('..', '..', 'maya.json'))
+
+  mayaWatcher.on('change', async path => {
+    await updateMayaJSON()
+    await writeAllLegacyFiles()
   })
 }
 
