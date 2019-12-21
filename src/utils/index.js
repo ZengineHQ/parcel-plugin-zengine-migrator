@@ -36,11 +36,6 @@ const camelCaseToKebab = str => {
     .toLowerCase()
 }
 
-const wgnTransformer = (contents, namespace) => contents
-  .replace(/wgn([A-Za-z])/g, (match, first) => `${kebabToCamelCase(namespace)}${first.toUpperCase()}`)
-  .replace(/wgn-/g, () => `${camelCaseToKebab(namespace)}-`)
-  .replace(/wgn/g, () => namespace)
-
 let mayaJSON = fs.existsSync(relCwd('..', '..', 'maya.json')) &&
   JSON.parse(fs.readFileSync(relCwd('..', '..', 'maya.json'), { encoding: 'utf8' }))
 
@@ -72,11 +67,25 @@ const getNamespace = () => {
   return mayaJSON ? mayaJSON.environments[process.env.ZENGINE_ENV].plugins[pluginName].namespace : 'default'
 }
 
+const getRoute = () => {
+  return (mayaJSON && mayaJSON.environments[process.env.ZENGINE_ENV].plugins[pluginName].route) || getNamespace()
+}
+
+const wgnTransformer = (contents, namespace) => contents
+  .replace(/wgn([A-Za-z])/g, (match, first) => `${kebabToCamelCase(namespace)}${first.toUpperCase()}`)
+  .replace(/wgn-/g, () => `${camelCaseToKebab(namespace)}-`)
+  .replace(/wgn/g, () => namespace)
+
+const replaceRouteTransformer = (contents, route) => contents
+  .replace(new RegExp('{replace-route}', 'g'), route)
+
 module.exports = {
   promisify,
   relCwd,
   kebabToCamelCase,
   wgnTransformer,
   getNamespace,
-  camelCaseToKebab
+  camelCaseToKebab,
+  getRoute,
+  replaceRouteTransformer
 }
