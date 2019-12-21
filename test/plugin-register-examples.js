@@ -18,6 +18,26 @@ plugin.register('wgn', {
 });
 `
 
+exports.fullPageWithTopNavTrueRouteReplaced = namespace => `
+plugin.register('wgn', {
+    route: '${namespace}',
+    title: 'Letter Generator',
+    icon: 'icon-mail-squared',
+    interfaces: [
+        {
+            controller: 'wgnCntl',
+            template: 'wgn-main',
+            type: 'fullPage',
+            order: 300,
+            topNav: true,
+            routes: [
+                '/:page'
+            ]
+        }
+    ]
+});
+`
+
 exports.fullPageWithTopNavTrueResult = {
   icon: 'icon-mail-squared',
   views: [

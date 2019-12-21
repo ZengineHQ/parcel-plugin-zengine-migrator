@@ -1,9 +1,10 @@
 const assert = require('assert')
 const { deepEqual } = assert
-const { wgnTransformer, kebabToCamelCase, camelCaseToKebab } = require('../src/utils')
+const { wgnTransformer, kebabToCamelCase, camelCaseToKebab, replaceRouteTransformer } = require('../src/utils')
 const extractPluginJSON = require('../src/register-extractor')
 const {
   fullPageWithTopNavTrue,
+  fullPageWithTopNavTrueRouteReplaced,
   fullPageWithTopNavTrueResult,
   fullPageWithTopNavFalse,
   fullPageWithTopNavFalseResult,
@@ -215,6 +216,11 @@ deepEqual(
   JSON.parse(extractPluginJSON(singleInterfaceInlineNoIcon)),
   singleInterfaceInlineNoIconResult,
   'Unable to extract accurate plugin JSON from single inline interface with no icon and topNav: false'
+)
+
+assert(
+  replaceRouteTransformer(fullPageWithTopNavTrue, 'route') === fullPageWithTopNavTrueRouteReplaced('route'),
+  'Unable to accurately replace occurences of {replace-route}'
 )
 
 console.log('All tests pass!')
