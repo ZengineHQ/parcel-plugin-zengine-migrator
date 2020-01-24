@@ -45,7 +45,7 @@ module.exports = async bundler => {
       if (childBundle.type === 'js' && fs.existsSync(pluginJS)) {
         bundler.watch(pluginJS, childBundle.entryAsset)
 
-        if (childBundle.entryAsset.basename === 'plugin.js') {
+        if (childBundle.entryAsset && childBundle.entryAsset.basename === 'plugin.js') {
           const pluginJSON = registerExtractor(fs.readFileSync(pluginJS))
 
           fs.writeFile(path.resolve(bundleDir, 'plugin.json'), pluginJSON, err => err && console.error(err))
