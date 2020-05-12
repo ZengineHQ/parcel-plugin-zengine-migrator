@@ -23,7 +23,9 @@ const {
   singleInterfaceInline,
   singleInterfaceInlineResult,
   singleInterfaceInlineNoIcon,
-  singleInterfaceInlineNoIconResult
+  singleInterfaceInlineNoIconResult,
+  fullPageSettingsAndInlineWithDefaultDimensions,
+  fullPageSettingsAndInlineWithDefaultDimensionsResult
 } = require('./plugin-register-examples')
 
 assert(
@@ -216,6 +218,11 @@ deepEqual(
   JSON.parse(extractPluginJSON(singleInterfaceInlineNoIcon)),
   singleInterfaceInlineNoIconResult,
   'Unable to extract accurate plugin JSON from single inline interface with no icon and topNav: false'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(fullPageSettingsAndInlineWithDefaultDimensions)),
+  fullPageSettingsAndInlineWithDefaultDimensionsResult
 )
 
 assert(

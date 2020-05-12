@@ -358,3 +358,54 @@ exports.singleInterfaceInlineNoIconResult = {
     }
   ]
 }
+
+exports.fullPageSettingsAndInlineWithDefaultDimensions = `
+plugin.register('wgn', {
+	title: 'Financial Edge Integrations',
+	icon: 'icon-money',
+	interfaces: [
+		{
+			controller: 'wgnSettingsCtrl',
+			template: 'wgn-settings',
+			type: 'settings',
+			defaultDimensions: {
+				height: '50px',
+				width: '50px'
+			}
+		},
+		{
+			controller: 'wgnSettingsCtrl',
+			template: 'wgn-settings',
+			type: 'inline',
+			location: 'zn-plugin-data-subheader',
+			'defaultDimensions': {
+				'width': '25px',
+				'height': '25px'
+			}
+		}
+	]
+});
+`
+
+exports.fullPageSettingsAndInlineWithDefaultDimensionsResult = {
+  views: [
+    {
+      src: '/index.html',
+      type: 'settings',
+      defaultDimensions: {
+        height: '50px',
+        width: '50px'
+      }
+    },
+    {
+      src: '/index.html',
+      type: 'inline',
+      location: 'zn-plugin-data-subheader',
+      defaultDimensions: {
+        width: '25px',
+        height: '25px'
+      }
+    }
+  ],
+  icon: 'icon-money'
+}
