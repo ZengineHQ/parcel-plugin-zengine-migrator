@@ -115,12 +115,29 @@ function isPluginRegistrationCall (node) {
     node.type !== 'ExpressionStatement' ||
     node.expression.type !== 'CallExpression' ||
     node.expression.callee.type !== 'MemberExpression' ||
-    node.expression.callee.object.name !== 'plugin' ||
     node.expression.callee.property.name !== 'register' ||
+    !recursiveSearchForPlugin(node.expression.callee) ||
     node.expression.arguments.some(arg => arg.type !== 'Literal' && arg.type !== 'ObjectExpression')
   ) {
     return false
   }
 
   return true
+}
+
+function recursiveSearchForPlugin (node) {
+  if (node.object.name === 'plugin') {
+    return true
+  }
+
+  if (
+    node.object &&
+    node.object.type === 'CallExpression' &&
+    node.object.callee &&
+    node.object.callee.type === 'MemberExpression'
+  ) {
+    return recursiveSearchForPlugin(node.object.callee)
+  }
+
+  return false
 }
