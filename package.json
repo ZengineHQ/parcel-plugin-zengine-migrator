@@ -1,6 +1,6 @@
 {
   "name": "parcel-plugin-zengine-migrator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parcel Plugin for Building/Migrating Legacy Zengine Plugins",
   "scripts": {
     "test": "node ./test",
