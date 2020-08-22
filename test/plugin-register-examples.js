@@ -387,6 +387,37 @@ plugin.register('wgn', {
 });
 `
 
+exports.fullPageSettingsAndInlineWithDefaultDimensionsChained = `
+plugin
+.controller('wgnCntl', ['$scope', function ($scope) {}])
+.service('wgnService', [function () {}])
+.register('wgn', {
+	title: 'Financial Edge Integrations',
+	icon: 'icon-money',
+	interfaces: [
+		{
+			controller: 'wgnSettingsCtrl',
+			template: 'wgn-settings',
+			type: 'settings',
+			defaultDimensions: {
+				height: '50px',
+				width: '50px'
+			}
+		},
+		{
+			controller: 'wgnSettingsCtrl',
+			template: 'wgn-settings',
+			type: 'inline',
+			location: 'zn-plugin-data-subheader',
+			'defaultDimensions': {
+				'width': '25px',
+				'height': '25px'
+			}
+		}
+	]
+});
+`
+
 exports.fullPageSettingsAndInlineWithDefaultDimensionsResult = {
   views: [
     {

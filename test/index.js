@@ -25,7 +25,8 @@ const {
   singleInterfaceInlineNoIcon,
   singleInterfaceInlineNoIconResult,
   fullPageSettingsAndInlineWithDefaultDimensions,
-  fullPageSettingsAndInlineWithDefaultDimensionsResult
+  fullPageSettingsAndInlineWithDefaultDimensionsResult,
+  fullPageSettingsAndInlineWithDefaultDimensionsChained
 } = require('./plugin-register-examples')
 
 assert(
@@ -222,7 +223,14 @@ deepEqual(
 
 deepEqual(
   JSON.parse(extractPluginJSON(fullPageSettingsAndInlineWithDefaultDimensions)),
-  fullPageSettingsAndInlineWithDefaultDimensionsResult
+  fullPageSettingsAndInlineWithDefaultDimensionsResult,
+  'Unable to extract accurate plugin JSON from fullPage and inline interfaces with default dimensions'
+)
+
+deepEqual(
+  JSON.parse(extractPluginJSON(fullPageSettingsAndInlineWithDefaultDimensionsChained)),
+  fullPageSettingsAndInlineWithDefaultDimensionsResult,
+  'Unable to extract accurate plugin JSON chained register call (plugin.controller().service().register())'
 )
 
 assert(
